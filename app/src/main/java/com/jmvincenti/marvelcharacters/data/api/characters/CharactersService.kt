@@ -3,6 +3,7 @@ package com.jmvincenti.marvelcharacters.data.api.characters
 import com.jmvincenti.marvelcharacters.data.model.Character
 import com.jmvincenti.marvelcharacters.data.model.CharacterDataWrapper
 import io.reactivex.Single
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,8 +12,9 @@ import retrofit2.http.Query
  */
 interface CharactersService {
 
+
     @GET("v1/public/characters")
-    fun getCharacters(@Query("offset") offset: Int = 0): Single<CharacterDataWrapper<Character>>
+    fun getCharacters(@Query("offset") offset: Int, @Query("limit") limit: Int): Call<CharacterDataWrapper<Character>>
 
 
 }

@@ -7,9 +7,12 @@ ext {
             constraintLayoutVersion: '1.1.0',
             hawkVersion            : '2.0.1',
             pagingVersion          : '1.0.0',
+            pagingRxVersion        : '1.0.0-alpha1',
+            lifecycleVersion       : '1.1.1',
             retrofitVersion        : '2.4.0',
             rxandroidVersion       : '2.0.2',
             rxjavaVersion          : '2.1.10',
+            timberVersion          : '4.7.0',
 
     ]
 
@@ -22,6 +25,8 @@ ext {
             cardview        : "com.android.support:cardview-v7:${versions.supportLibraryVersion}",
             design          : "com.android.support:design:${versions.supportLibraryVersion}",
             paging          : "android.arch.paging:runtime:${versions.pagingVersion}",
+            pagingRx        : "android.arch.paging:rxjava2:${versions.pagingRxVersion}",
+            lifecycle       : "android.arch.lifecycle:extensions:${versions.lifecycleVersion}",
 
             /**
              * Retrofit
@@ -37,6 +42,12 @@ ext {
              */
             rxandroid       : "io.reactivex.rxjava2:rxandroid:${versions.rxandroidVersion}",
             rxjava          : "io.reactivex.rxjava2:rxjava:${versions.rxjavaVersion}",
+
+            /**
+             * Logs
+             */
+
+            timber          : "com.jakewharton.timber:timber:${versions.timberVersion}",
 
             /**
              * Preferences

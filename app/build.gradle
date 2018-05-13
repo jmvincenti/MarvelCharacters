@@ -13,6 +13,7 @@ android {
         versionCode 0 //ignored
         versionName "0.0" //ignored
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -30,7 +31,7 @@ android {
             applicationIdSuffix ".dev"
             buildConfigField 'String', 'API_BASE_URL', "\"${devEnvironment.baseUrl}\""
             buildConfigField 'String', 'API_PRIVATE_KEY', "\"${devEnvironment.privateKey}\""
-            buildConfigField 'String', 'API_PUBLIC_KEY',"\"${ devEnvironment.publicKey}\""
+            buildConfigField 'String', 'API_PUBLIC_KEY', "\"${devEnvironment.publicKey}\""
         }
         PROD {
             dimension "environment"
@@ -68,6 +69,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -77,12 +79,15 @@ dependencies {
     implementation libraries.cardview
     implementation libraries.design
     implementation libraries.paging
+    implementation libraries.pagingRx
+    implementation libraries.lifecycle
 
     implementation libraries.retrofitRx
     implementation libraries.rxandroid
     implementation libraries.rxjava
 
     implementation libraries.hawk
+    implementation libraries.timber
 
 
 }

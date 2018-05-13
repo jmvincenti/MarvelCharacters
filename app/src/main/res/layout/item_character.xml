@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="0dp"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/character_item_image"
+        android:layout_width="100dp"
+        android:layout_height="56dp"
+        android:background="#757575"
+        android:scaleType="centerCrop"
+        android:src="@drawable/marvel" />
+
+    <TextView
+        android:id="@+id/character_item_name"
+        style="@style/AppTheme.Subheader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/character_item_image"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Character name" />
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/character_item_description"-->
+    <!--style="@style/AppTheme.Body1"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignStart="@+id/character_item_name"-->
+    <!--android:layout_below="@+id/character_item_name"-->
+    <!--android:lines="2"-->
+    <!--android:textColor="@color/greySecondary"-->
+    <!--tools:text="Character description, it can be on single or multiple lines" />-->
+
+
+</RelativeLayout>

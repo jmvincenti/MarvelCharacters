@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">MarvelCharacters</string>
+    <string name="app_name">Marvel characters</string>
+
+
+    <!-- Character list activity -->
+    <string name="all_characters">All Heroes</string>
+    <string name="sorted_by_name">sorted by name</string>
+    <string name="sorted_by_modified">sorted by modified</string>
+    <string name="message_no_results">Oops, couldn\'t find any results\nthat matched your filter</string>
+
 </resources>
