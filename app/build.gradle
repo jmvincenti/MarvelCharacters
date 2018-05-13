@@ -28,11 +28,17 @@ android {
             versionCode gitVersionCodeTime
             versionName gitVersionNameBranch
             applicationIdSuffix ".dev"
+            buildConfigField 'String', 'API_BASE_URL', "\"${devEnvironment.baseUrl}\""
+            buildConfigField 'String', 'API_PRIVATE_KEY', "\"${devEnvironment.privateKey}\""
+            buildConfigField 'String', 'API_PUBLIC_KEY',"\"${ devEnvironment.publicKey}\""
         }
         PROD {
             dimension "environment"
             versionCode gitVersionCode
             versionName gitVersionName
+            buildConfigField 'String', 'API_BASE_URL', prodEnvironment.baseUrl
+            buildConfigField 'String', 'API_PRIVATE_KEY', prodEnvironment.privateKey
+            buildConfigField 'String', 'API_PUBLIC_KEY', prodEnvironment.publicKey
         }
     }
 
