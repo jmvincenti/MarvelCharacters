@@ -10,8 +10,8 @@ android {
         applicationId "com.jmvincenti.marvelcharacters"
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 0 //ignored
+        versionName "0.0" //ignored
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,11 +20,48 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "environment"
+    productFlavors {
+        DEV {
+            dimension "environment"
+            versionCode gitVersionCodeTime
+            versionName gitVersionNameBranch
+            applicationIdSuffix ".dev"
+        }
+        PROD {
+            dimension "environment"
+            versionCode gitVersionCode
+            versionName gitVersionName
+        }
+    }
+
+    //Ignore release in dev flavor
+    android.variantFilter { variant ->
+        if (variant.buildType.name == 'release' && variant.getFlavors().get(0).name == 'DEV') {
+            variant.setIgnore(true)
+        }
+    }
+
+    //Rename generated APK file name with version code and name
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def app_name = variant.getApplicationId()
+                def versionName = "-" + variant.versionName
+                def versionCode = "-" + variant.versionCode
+                def fileName = app_name + versionName + versionCode + ".apk"
+                outputFileName = fileName
+            }
+        }
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -40,7 +77,6 @@ dependencies {
     implementation libraries.rxjava
 
     implementation libraries.hawk
-
 
 
 }
