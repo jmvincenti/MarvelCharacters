@@ -7,5 +7,6 @@
     <string name="sorted_by_name">sorted by name</string>
     <string name="sorted_by_modified">sorted by modified</string>
     <string name="message_no_results">Oops, couldn\'t find any results\nthat matched your filter</string>
+    <string name="no_description">No description available</string>
 
 </resources>

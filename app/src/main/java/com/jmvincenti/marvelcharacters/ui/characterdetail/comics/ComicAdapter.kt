@@ -14,7 +14,6 @@ class  ComicAdapter : RecyclerView.Adapter<ComicViewHolder>() {
     fun setItem(comics: List<Comic>?) {
         items.clear()
         comics?.let { items.addAll(it) }
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {

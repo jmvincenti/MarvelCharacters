@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 
 data class Character(
-        @SerializedName("id") var id: String? = null,
+        @SerializedName("id") var id: Int? = null,
         @SerializedName("name") var name: String? = null,
         @SerializedName("description") var description: String? = null,
         @SerializedName("modified") var modified: String? = null,
