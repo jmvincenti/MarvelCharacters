@@ -3,6 +3,7 @@ package com.jmvincenti.marvelcharacters.ui.characterlist
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
@@ -12,26 +13,32 @@ import android.view.Menu
 import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.repository.CharactersDataSourceFactory
+import com.jmvincenti.marvelcharacters.ui.characterdetail.CharacterDetailActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_character_list.*
 import java.util.concurrent.Executors
 
-class CharacterListActivity : AppCompatActivity() {
+class CharacterListActivity : AppCompatActivity(), CharacterListContract.View {
+
+
     lateinit var adapter: CharacterAdapter
     private lateinit var viewModel: CharacterListViewModel
     private val disposable = CompositeDisposable()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_list)
         viewModel = getViewModel()
+        if (viewModel.presenter == null) {
+           viewModel.presenter = CharacterListPresenter()
+        }
+        viewModel.presenter?.setView(this)
         initAdapter()
     }
 
     private fun initAdapter() {
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter = CharacterAdapter()
+        adapter = CharacterAdapter(viewModel.presenter)
         recycler_characters.layoutManager = linearLayoutManager
         recycler_characters.adapter = adapter
     }
@@ -46,6 +53,12 @@ class CharacterListActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         disposable.clear()
+    }
+
+    override fun openCharacterDetail(characterId: Int) {
+        val i = Intent(this, CharacterDetailActivity::class.java)
+        i.putExtra(CharacterDetailActivity.INTENT_CHARACTER_ID, characterId)
+        startActivity(i)
     }
 
     private fun getViewModel(): CharacterListViewModel {

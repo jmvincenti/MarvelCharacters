@@ -13,10 +13,13 @@ import kotlinx.android.synthetic.main.item_character.view.*
 /**
  * TODO: Add a class header comment! 😘
  */
-class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class CharacterViewHolder(view: View, private val presenter : CharacterListContract.Presenter<CharacterListContract.View>?) : RecyclerView.ViewHolder(view)  {
+
 
     fun bindTo(character: Character?) {
-
+        itemView.setOnClickListener {
+            presenter?.onCharacterSelected(character)
+        }
         itemView.character_item_name.text = character?.name
         itemView.character_item_description.text = character?.description
         Glide.with(itemView.context)
@@ -26,10 +29,10 @@ class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 
     companion object {
-        fun create(parent: ViewGroup): CharacterViewHolder {
+        fun create(parent: ViewGroup, presenter : CharacterListContract.Presenter<CharacterListContract.View>?): CharacterViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(LAYOUT_ID, parent, false)
-            return CharacterViewHolder(view)
+            return CharacterViewHolder(view, presenter)
         }
 
         const val LAYOUT_ID = R.layout.item_character

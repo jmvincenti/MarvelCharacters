@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 class CharacterListViewModel(sourceFactory: CharactersDataSourceFactory) : ViewModel() {
     private val searchSubject = PublishSubject.create<String?>()
     private val compositeDisposable = CompositeDisposable()
-
+    var presenter : CharacterListContract.Presenter<CharacterListContract.View>? = null
 
     init {
         compositeDisposable.add(searchSubject

@@ -8,9 +8,9 @@ import com.jmvincenti.marvelcharacters.data.model.Character
 /**
  * TODO: Add a class header comment! 😘
  */
-class CharacterAdapter : PagedListAdapter<Character, CharacterViewHolder>(DoorDiffCallback) {
+class CharacterAdapter(private val presenter: CharacterListContract.Presenter<CharacterListContract.View>?) : PagedListAdapter<Character, CharacterViewHolder>(DoorDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
-        return CharacterViewHolder.create(parent)
+        return CharacterViewHolder.create(parent, presenter)
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
