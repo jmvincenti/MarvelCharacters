@@ -36,7 +36,8 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Character>) {
         val request = client.getCharacters(
                 offset = 0,
-                limit = params.requestedLoadSize)
+                limit = params.requestedLoadSize,
+                startName = filter)
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
 
@@ -69,7 +70,8 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
         networkState.postValue(NetworkState.LOADING)
         client.getCharacters(
                 offset = params.key,
-                limit = params.requestedLoadSize).enqueue(
+                limit = params.requestedLoadSize,
+                startName = filter).enqueue(
                 object : retrofit2.Callback<CharacterDataWrapper<Character>> {
                     override fun onFailure(call: Call<CharacterDataWrapper<Character>>, t: Throwable) {
                         retry = {
@@ -123,5 +125,21 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Character>) {
         // ignored, since we only ever append to our initial load
+    }
+
+    fun applyFilter(filter: String?) {
+        val newFilter = if (filter.isNullOrBlank()) {
+            null
+        } else {
+            filter
+        }
+        if (newFilter != PageKeyedChraracterDataSource.filter) {
+            PageKeyedChraracterDataSource.filter = newFilter
+            invalidate()
+        }
+    }
+
+    companion object {
+        public var filter: String? = null
     }
 }

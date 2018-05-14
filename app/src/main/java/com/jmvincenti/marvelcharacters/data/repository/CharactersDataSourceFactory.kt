@@ -12,6 +12,7 @@ import java.util.concurrent.Executor
 class CharactersDataSourceFactory(private val client: CharactersClient,
                                   private val retryExecutor: Executor) : DataSource.Factory<Int, Character>() {
     val sourceLiveData = MutableLiveData<PageKeyedChraracterDataSource>()
+
     override fun create(): DataSource<Int, Character> {
         val source = PageKeyedChraracterDataSource(client, retryExecutor)
         sourceLiveData.postValue(source)

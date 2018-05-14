@@ -83,6 +83,7 @@ dependencies {
     implementation libraries.lifecycle
 
     implementation libraries.retrofitRx
+    implementation libraries.glide
     implementation libraries.rxandroid
     implementation libraries.rxjava
 

@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
-    android:paddingBottom="8dp"
+    android:paddingBottom="16dp"
     android:paddingEnd="8dp"
     android:paddingStart="0dp"
-    android:paddingTop="8dp">
+    android:paddingTop="16dp">
 
     <ImageView
         android:id="@+id/character_item_image"
@@ -23,7 +23,6 @@
         style="@style/AppTheme.Subheader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/character_item_image"
         android:ellipsize="end"
@@ -31,16 +30,17 @@
         tools:text="Character name" />
 
 
-    <!--<TextView-->
-    <!--android:id="@+id/character_item_description"-->
-    <!--style="@style/AppTheme.Body1"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignStart="@+id/character_item_name"-->
-    <!--android:layout_below="@+id/character_item_name"-->
-    <!--android:lines="2"-->
-    <!--android:textColor="@color/greySecondary"-->
-    <!--tools:text="Character description, it can be on single or multiple lines" />-->
+    <TextView
+        android:id="@+id/character_item_description"
+        style="@style/AppTheme.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/character_item_name"
+        android:layout_below="@+id/character_item_name"
+        android:lines="2"
+        android:textColor="@color/greySecondary"
+        android:ellipsize="end"
+        tools:text="Character description, it can be on single or multiple lines" />
 
 
 </RelativeLayout>

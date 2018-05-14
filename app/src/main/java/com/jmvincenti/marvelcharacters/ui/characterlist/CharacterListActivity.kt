@@ -4,9 +4,11 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
+import android.support.v7.widget.SearchView
+import android.view.Menu
 import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.repository.CharactersDataSourceFactory
@@ -17,7 +19,6 @@ import java.util.concurrent.Executors
 class CharacterListActivity : AppCompatActivity() {
     lateinit var adapter: CharacterAdapter
     private lateinit var viewModel: CharacterListViewModel
-
     private val disposable = CompositeDisposable()
 
 
@@ -56,5 +57,28 @@ class CharacterListActivity : AppCompatActivity() {
                 return CharacterListViewModel(repo) as T
             }
         })[CharacterListViewModel::class.java]
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.character_list_menu, menu)
+        // Retrieve the SearchView and plug it into SearchManager
+        val searchView = MenuItemCompat.getActionView(menu.findItem(R.id.action_search)) as SearchView
+        searchView.setOnCloseListener {
+            viewModel.applyFilter(null)
+            true
+        }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.applyFilter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.applyFilter(newText)
+                return true
+            }
+
+        })
+        return true
     }
 }
