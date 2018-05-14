@@ -1,12 +1,11 @@
 package com.jmvincenti.marvelcharacters.ui.characterlist
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.arch.paging.RxPagedListBuilder
 import com.jmvincenti.marvelcharacters.data.model.Character
 import com.jmvincenti.marvelcharacters.data.repository.CharactersDataSourceFactory
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
@@ -18,17 +17,17 @@ import java.util.concurrent.TimeUnit
 class CharacterListViewModel(sourceFactory: CharactersDataSourceFactory) : ViewModel() {
     private val searchSubject = PublishSubject.create<String?>()
     private val compositeDisposable = CompositeDisposable()
-    var presenter : CharacterListContract.Presenter<CharacterListContract.View>? = null
+    var presenter: CharacterListContract.Presenter<CharacterListContract.View>? = null
 
     init {
         compositeDisposable.add(searchSubject
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .subscribe({ filter ->
                     sourceFactory.sourceLiveData.value?.applyFilter(filter)
                 }, { throwable ->
                     throwable.printStackTrace()
-                    //TODO deal with error
+                    presenter?.handleError(throwable)
                 }))
     }
 
@@ -41,8 +40,8 @@ class CharacterListViewModel(sourceFactory: CharactersDataSourceFactory) : ViewM
         compositeDisposable.dispose()
     }
 
-    val characterList: Flowable<PagedList<Character>> = RxPagedListBuilder(
+    val characterList: LiveData<PagedList<Character>> = LivePagedListBuilder(
             sourceFactory,
             /* page size */ 20
-    ).buildFlowable(BackpressureStrategy.LATEST)
+    ).build()
 }

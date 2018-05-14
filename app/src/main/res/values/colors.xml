@@ -14,7 +14,11 @@
     <color name="cardBackground">#FFF</color>
     <color name="titleTextColor">#FFF</color>
 
+    <color name="imageOverlayColor">#66000000</color>
+    <color name="textOverlayColor">#FFF</color>
+
     <color name="greyPrimary">#DE000000</color>
     <color name="greySecondary">#8B000000</color>
     <color name="greyDisabled">#61000000</color>
+    <color name="dividerColor">#42000000</color>
 </resources>

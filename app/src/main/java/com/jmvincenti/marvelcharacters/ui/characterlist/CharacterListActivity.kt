@@ -1,5 +1,6 @@
 package com.jmvincenti.marvelcharacters.ui.characterlist
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
@@ -23,37 +25,30 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View {
 
     lateinit var adapter: CharacterAdapter
     private lateinit var viewModel: CharacterListViewModel
-    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_list)
         viewModel = getViewModel()
         if (viewModel.presenter == null) {
-           viewModel.presenter = CharacterListPresenter()
+            viewModel.presenter = CharacterListPresenter()
         }
         viewModel.presenter?.setView(this)
         initAdapter()
+        viewModel.characterList.observe(this, Observer{ result ->
+            adapter.submitList(result)
+        })
     }
 
     private fun initAdapter() {
-        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+//        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val linearLayoutManager = GridLayoutManager(this, 2)
         adapter = CharacterAdapter(viewModel.presenter)
         recycler_characters.layoutManager = linearLayoutManager
         recycler_characters.adapter = adapter
     }
 
-    override fun onStart() {
-        super.onStart()
-        disposable.add(viewModel.characterList.subscribe({ flowableList ->
-            adapter.submitList(flowableList)
-        }))
-    }
 
-    override fun onStop() {
-        super.onStop()
-        disposable.clear()
-    }
 
     override fun openCharacterDetail(characterId: Int) {
         val i = Intent(this, CharacterDetailActivity::class.java)

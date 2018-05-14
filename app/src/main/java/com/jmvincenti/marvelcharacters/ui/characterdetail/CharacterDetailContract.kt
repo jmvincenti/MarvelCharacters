@@ -9,7 +9,7 @@ import com.jmvincenti.marvelcharacters.data.model.*
 interface CharacterDetailContract {
 
     interface View {
-        fun setTitle(title: String?)
+        fun setName(title: String?)
         fun setCover(url: ApiImage)
         fun hideDescription()
         fun handleNoDescription()

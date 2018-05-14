@@ -15,6 +15,7 @@ interface CharacterListContract {
     interface Presenter<V : CharacterListContract.View> {
         fun setView(view: V)
         fun onCharacterSelected(character: Character?)
+        fun handleError(throwable: Throwable)
     }
 
 

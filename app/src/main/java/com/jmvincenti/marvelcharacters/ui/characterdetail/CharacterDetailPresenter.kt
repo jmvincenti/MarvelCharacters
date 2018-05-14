@@ -17,7 +17,7 @@ class CharacterDetailPresenter<V : CharacterDetailContract.View> : CharacterDeta
 
     override fun handleCharacter(character: Character?) {
 
-        character?.name?.let { mView?.setTitle(it) }
+        character?.name?.let { mView?.setName(it) }
 
         character?.thumbnail?.let { mView?.setCover(it) }
 
@@ -70,8 +70,7 @@ class CharacterDetailPresenter<V : CharacterDetailContract.View> : CharacterDeta
         val description = character?.description
         val hasDescription = description != null && description.isNotBlank()
         when {
-            !hasWikiLink && !hasComicLink && !hasDetailLink && !hasDescription -> mView?.hideDescription()
-            !hasDescription -> mView?.handleNoDescription()
+            !hasDescription -> mView?.hideDescription()
             else -> mView?.setDescription(description!!)
         }
 

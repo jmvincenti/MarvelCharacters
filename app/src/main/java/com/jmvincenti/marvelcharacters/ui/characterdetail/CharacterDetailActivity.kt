@@ -47,8 +47,9 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
         }
     }
 
-    override fun setTitle(title: String?) {
+    override fun setName(title: String?) {
         toolbar.title = title
+        character_detail_name.text = title
     }
 
     override fun setCover(url: ApiImage) {
@@ -58,16 +59,16 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
     }
 
     override fun setDescription(desciption: String) {
-        character_detail_card.visibility = View.VISIBLE
+        character_detail_description.visibility = View.VISIBLE
         character_detail_description.text = desciption
     }
 
     override fun hideDescription() {
-        character_detail_card.visibility = View.GONE
+        character_detail_description.visibility = View.GONE
     }
 
     override fun handleNoDescription() {
-        character_detail_card.visibility = View.VISIBLE
+        character_detail_description.visibility = View.VISIBLE
         character_detail_description.setText(R.string.no_description)
     }
 
