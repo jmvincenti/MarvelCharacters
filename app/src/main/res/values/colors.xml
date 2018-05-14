@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/captainColor</color>
+    <color name="colorPrimaryDark">@color/superwoman</color>
+    <color name="colorAccent">@color/hulkColor</color>
+
+    <color name="spiderManColor">#E22639</color>
+    <color name="superwoman">#344E91</color>
+    <color name="captainColor">#286D92</color>
+    <color name="hulkColor">#72903D</color>
+    <color name="textOnHeroes">#FFF</color>
+
+
+    <color name="cardBackground">#FFF</color>
+    <color name="titleTextColor">#FFF</color>
 
     <color name="greyPrimary">#DE000000</color>
     <color name="greySecondary">#8B000000</color>

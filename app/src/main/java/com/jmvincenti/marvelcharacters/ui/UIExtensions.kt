@@ -12,4 +12,5 @@ import com.jmvincenti.marvelcharacters.data.model.ApiImage
 /**
  * Get the full image path depending screen size
  */
-fun ApiImage.getFullPath(context: Context): String = "$path/${context.getString(R.string.image_landscape_variant)}.$extension"
+fun ApiImage.getLandscapePath(context: Context): String = "$path/${context.getString(R.string.image_landscape_variant)}.$extension"
+fun ApiImage.getPortraitLargePath(context: Context): String = "$path/${context.getString(R.string.image_portrait_large_variant)}.$extension"

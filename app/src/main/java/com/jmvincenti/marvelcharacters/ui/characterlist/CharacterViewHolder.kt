@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.model.Character
-import com.jmvincenti.marvelcharacters.ui.getFullPath
+import com.jmvincenti.marvelcharacters.ui.getLandscapePath
 import kotlinx.android.synthetic.main.item_character.view.*
 
 /**
@@ -20,7 +20,7 @@ class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         itemView.character_item_name.text = character?.name
         itemView.character_item_description.text = character?.description
         Glide.with(itemView.context)
-                .load(character?.thumbnail?.getFullPath(itemView.context))
+                .load(character?.thumbnail?.getLandscapePath(itemView.context))
                 .into(itemView.character_item_image)
     }
 
