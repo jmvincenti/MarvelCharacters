@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Marvelous</string>
+
+
+    <!-- Character list activity -->
+    <string name="all_characters">All Heroes</string>
+    <string name="sorted_by_name">sorted by name</string>
+    <string name="sorted_by_modified">sorted by modified</string>
+    <string name="message_no_results">Oops, couldn\'t find any results\nthat matched your filter</string>
+    <string name="no_description">No description available</string>
+    <string name="retry">Try again</string>
+    <string name="list_failed">Failed to load more characters</string>
+    <string name="detail_error_title">Error</string>
+    <string name="detail_error_message">Failed to load character detail</string>
+    <string name="who_is_this_character_title">Who is this character?</string>
+    <string name="main_menu_guess_description">Guess the name of the character</string>
+    <string name="main_menu_guess_title">WHO AM I?</string>
+
+</resources>

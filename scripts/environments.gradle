@@ -1,0 +1,13 @@
+ext {
+    devEnvironment = [
+            baseUrl : "https://gateway.marvel.com/",
+            publicKey : "YOUR_PUBLIC_KEY",
+            privateKey : "YOUR_PRIVATE_KEY"
+    ]
+
+    prodEnvironment = [
+            baseUrl : "https://gateway.marvel.com/",
+            publicKey : "YOUR_PUBLIC_KEY",
+            privateKey : "YOUR_PRIVATE_KEY"
+    ]
+}

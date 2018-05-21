@@ -1,0 +1,79 @@
+ext {
+    versions = [
+            minSdkVersion          : 19,
+            compileSdkVersion      : 27,
+            targetSdkVersion       : 27,
+            supportLibraryVersion  : '27.1.1',
+            constraintLayoutVersion: '1.1.0',
+            hawkVersion            : '2.0.1',
+            pagingVersion          : '1.0.0',
+            pagingRxVersion        : '1.0.0-alpha1',
+            roomVersion            : '1.0.0',
+            roomAnnotationVersion  : '1.0.0',
+            lifecycleVersion       : '1.1.1',
+            retrofitVersion        : '2.4.0',
+            glideVersion           : '4.7.1',
+            rxandroidVersion       : '2.0.2',
+            rxjavaVersion          : '2.1.10',
+            timberVersion          : '4.7.0',
+            lottieVersion          : '2.5.4',
+            mockitoVersion          : '2.7.22',
+
+    ]
+
+    libraries = [
+
+            mockito : "org.mockito:mockito-core:${versions.mockitoVersion}",
+            mockitoAndroid : "org.mockito:mockito-android:${versions.mockitoVersion}",
+
+            /**
+             * Support libraries
+             */
+            appCompat       : "com.android.support:appcompat-v7:${versions.supportLibraryVersion}",
+            constraintLayout: "com.android.support.constraint:constraint-layout:${versions.constraintLayoutVersion}",
+            cardview        : "com.android.support:cardview-v7:${versions.supportLibraryVersion}",
+            design          : "com.android.support:design:${versions.supportLibraryVersion}",
+            paging          : "android.arch.paging:runtime:${versions.pagingVersion}",
+            pagingRx        : "android.arch.paging:rxjava2:${versions.pagingRxVersion}",
+            lifecycle       : "android.arch.lifecycle:extensions:${versions.lifecycleVersion}",
+
+            /**
+             * Retrofit
+             */
+            retrofitRx      : [
+                    "com.squareup.retrofit2:retrofit:${versions.retrofitVersion}",
+                    "com.squareup.retrofit2:converter-gson:${versions.retrofitVersion}",
+                    "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofitVersion}"
+            ],
+            glide           : "com.github.bumptech.glide:glide:${versions.glideVersion}",
+
+
+            room            : [
+                    "android.arch.persistence.room:runtime:${versions.roomVersion}",
+                    "android.arch.persistence.room:rxjava2:${versions.roomVersion}",
+            ],
+            roomAnnotation  : "android.arch.persistence.room:compiler:${versions.roomAnnotationVersion}",
+
+            /**
+             * Rx
+             */
+            rxandroid       : "io.reactivex.rxjava2:rxandroid:${versions.rxandroidVersion}",
+            rxjava          : "io.reactivex.rxjava2:rxjava:${versions.rxjavaVersion}",
+
+            /**
+             * Logs
+             */
+            timber          : "com.jakewharton.timber:timber:${versions.timberVersion}",
+
+            /**
+             * Preferences
+             */
+            hawk            : "com.orhanobut:hawk:${versions.hawkVersion}",
+
+            /**
+             * UI/Design
+             */
+            lottie          : "com.airbnb.android:lottie:${versions.lottieVersion}"
+
+    ]
+}

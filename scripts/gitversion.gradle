@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.ajoberstar:grgit:1.5.0'
+    }
+}
+
+import org.ajoberstar.grgit.Grgit
+
+ext {
+    git = Grgit.open(currentDir: projectDir)
+    gitDescribe = git.describe()
+    gitTagListSize = git.tag.list().size()
+    gitCommitTime = git.head().time
+    gitBranch = git.branch.getCurrent().getName()
+
+    gitVersionName = gitDescribe
+    gitVersionNameBranch = gitDescribe + "-" + gitBranch
+    gitVersionCode = gitTagListSize
+    gitVersionCodeTime = gitCommitTime
+}
+/**
+ * ./gradlew printVersion
+ */
+task printVersion() {
+    println("Describe: $gitDescribe")
+    println("Tag List Size: $gitTagListSize")
+    println("Commit Time: $gitCommitTime")
+    println("Branch: $gitBranch")
+    println("-------PROD-------")
+    println("VersionName: $gitVersionName")
+    println("VersionCode: $gitVersionCode")
+    println("-------DEV-------")
+    println("VersionNameBranch: $gitVersionNameBranch")
+    println("VersionCodeTime: $gitVersionCodeTime")
+}

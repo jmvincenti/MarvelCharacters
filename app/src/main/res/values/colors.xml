@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/thorColor</color>
+    <color name="colorPrimaryDark">@color/wonderWomanColor</color>
+    <color name="colorAccent">@color/hulkColor</color>
+
+    <color name="ironManColor">#C53D32</color>
+    <color name="ironManColorLight">#9e3027</color>
+    <color name="ironManColorOff">#99C53D32</color>
+
+    <color name="wonderWomanColor">#4153AF</color>
+    <color name="wonderWomanColorLight">#4153AF</color>
+    <color name="wonderWomanColorOff">#444153AF</color>
+
+    <color name="thorColor">#3F98D7</color>
+    <color name="thorColorLigh">#3580b6</color>
+    <color name="thorColorOff">#443F98D7</color>
+
+    <color name="hulkColor">#95C255</color>
+    <color name="hulkColorOff">#4495C255</color>
+    <color name="hulkColorLight">#6c8e3d</color>
+    <color name="textOnHeroes">#FFF</color>
+
+
+    <color name="cardBackground">#FFF</color>
+    <color name="titleTextColor">#FFF</color>
+
+    <color name="imageOverlayColor">#FFF</color>
+    <color name="textOverlayColor">@color/greyPrimary</color>
+
+    <color name="greyPrimary">#DE000000</color>
+    <color name="greySecondary">#8B000000</color>
+    <color name="greyDisabled">#61000000</color>
+    <color name="dividerColor">#42000000</color>
+</resources>

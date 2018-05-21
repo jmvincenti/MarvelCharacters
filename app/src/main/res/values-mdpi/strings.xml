@@ -1,0 +1,6 @@
+<resources>
+
+    <string name="image_landscape_variant">landscape_small</string>
+    <string name="image_portrait_large_variant">portrait_fantastic</string>
+    <string name="image_landscape_large_variant">landscape_fantastic</string>
+</resources>

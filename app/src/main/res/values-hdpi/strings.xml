@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="image_landscape_variant">landscape_medium</string>
+    <string name="image_portrait_large_variant">portrait_fantastic</string>
+    <string name="image_landscape_large_variant">landscape_fantastic</string>
+
+</resources>

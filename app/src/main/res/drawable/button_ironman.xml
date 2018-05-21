@@ -1,0 +1,5 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_ironman_disable" android:state_enabled="false" />
+    <item android:drawable="@drawable/bg_ironman_pressed" android:state_enabled="true" android:state_pressed="true" />
+    <item android:drawable="@drawable/bg_iron_normal" android:state_enabled="true" />
+</selector>
