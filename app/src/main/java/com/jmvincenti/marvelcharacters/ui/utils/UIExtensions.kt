@@ -14,3 +14,4 @@ import com.jmvincenti.marvelcharacters.data.model.ApiImage
  */
 fun ApiImage.getLandscapePath(context: Context): String = "$path/${context.getString(R.string.image_landscape_variant)}.$extension"
 fun ApiImage.getPortraitLargePath(context: Context): String = "$path/${context.getString(R.string.image_portrait_large_variant)}.$extension"
+fun ApiImage.getLandscapeLargePath(context: Context): String = "$path/${context.getString(R.string.image_landscape_large_variant)}.$extension"

@@ -10,14 +10,14 @@
 
     <color name="wonderWomanColor">#4153AF</color>
     <color name="wonderWomanColorLight">#4153AF</color>
-    <color name="wonderWomanColorOff">#994153AF</color>
+    <color name="wonderWomanColorOff">#444153AF</color>
 
     <color name="thorColor">#3F98D7</color>
     <color name="thorColorLigh">#3580b6</color>
-    <color name="thorColorOff">#993F98D7</color>
+    <color name="thorColorOff">#443F98D7</color>
 
     <color name="hulkColor">#95C255</color>
-    <color name="hulkColorOff">#9995C255</color>
+    <color name="hulkColorOff">#4495C255</color>
     <color name="hulkColorLight">#6c8e3d</color>
     <color name="textOnHeroes">#FFF</color>
 

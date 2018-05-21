@@ -17,6 +17,11 @@ class GuessPresenter : GuessContract.Presenter {
     override fun onAttached() {
         view?.updateState(state1, state2, state3, state4)
         view?.setCover(guessResult?.target?.thumbnail)
+        view?.displayResult(
+                answer1 = guessResult?.characters?.get(0)?.name,
+                answer2 = guessResult?.characters?.get(1)?.name,
+                answer3 = guessResult?.characters?.get(2)?.name,
+                answer4 = guessResult?.characters?.get(3)?.name)
         if (targetId == null) {
             view?.showLoader(true)
             view?.startNext()
@@ -26,7 +31,7 @@ class GuessPresenter : GuessContract.Presenter {
 
     override fun handleResult(guessResult: GuessResult?) {
         this.guessResult = guessResult
-        if (guessResult != null) {
+        if (guessResult != null && targetId != guessResult.target?.id) {
             view?.showLoader(false)
             view?.displayResult(
                     answer1 = guessResult.characters?.get(0)?.name,

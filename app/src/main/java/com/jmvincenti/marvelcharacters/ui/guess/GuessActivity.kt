@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.model.ApiImage
 import com.jmvincenti.marvelcharacters.injection.InjectorManager
+import com.jmvincenti.marvelcharacters.ui.utils.getLandscapePath
 import com.jmvincenti.marvelcharacters.ui.utils.getPortraitLargePath
 import kotlinx.android.synthetic.main.activity_guess.*
 
@@ -85,7 +87,9 @@ class GuessActivity : AppCompatActivity(), GuessContract.View {
         } else {
             image.visibility = View.VISIBLE
             Glide.with(this)
-                    .load(path.getPortraitLargePath(this))
+                    .load(if ( resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) path.getPortraitLargePath(this)
+                    else path.getLandscapePath(
+                            this))
                     .into(image)
         }
     }

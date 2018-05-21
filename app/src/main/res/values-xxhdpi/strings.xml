@@ -2,5 +2,6 @@
 
     <string name="image_landscape_variant">landscape_xlarge</string>
     <string name="image_portrait_large_variant">portrait_incredible</string>
+    <string name="image_landscape_large_variant">landscape_incredible</string>
 
 </resources>

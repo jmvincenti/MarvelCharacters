@@ -18,6 +18,8 @@ class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
     private var guessResult: GuessResult? = null
     private var attempt = 0
     private val maxAttempt = 3
+    private val mLock = Any()
+    private var isRunning = false
 
     var guessPresenter: GuessContract.Presenter? = null
 
@@ -25,27 +27,34 @@ class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
     fun getStateLiveData(): LiveData<NetworkState> = netWorkliveData
 
     fun getNewRandom() {
-        netWorkliveData.postValue(NetworkState.LOADING)
-        charactersClient.getCharactersAsync((Math.random() * (MyPreferences.maxCharacter - 4)).toInt(), 4)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    netWorkliveData.postValue(NetworkState.LOADED)
-                    result?.response?.total?.let {
-                        MyPreferences.maxCharacter = it
-                    }
-                    characters = result.response?.results
-                    guessResult = GuessResult(characters?.get((Math.random() * 4).toInt()), characters)
-                    if (attempt < maxAttempt && guessResult?.target?.thumbnail?.path?.contains("image_not_available") != false) {
-                        attempt++
-                        getNewRandom()
-                    } else {
-                        attempt = 0
-                        liveData.postValue(guessResult)
-                    }
-                }, { error ->
-                    netWorkliveData.postValue(NetworkState.error(error.message))
-                })
+        synchronized(mLock) {
+            if (!isRunning) {
+                isRunning = true
+                netWorkliveData.postValue(NetworkState.LOADING)
+                charactersClient.getCharactersAsync((Math.random() * (MyPreferences.maxCharacter - 4)).toInt(), 4)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ result ->
+                            netWorkliveData.postValue(NetworkState.LOADED)
+                            result?.response?.total?.let {
+                                MyPreferences.maxCharacter = it
+                            }
+                            characters = result.response?.results
+                            guessResult = GuessResult(characters?.get((Math.random() * 4).toInt()), characters)
+                            if (attempt < maxAttempt && guessResult?.target?.thumbnail?.path?.contains("image_not_available") != false) {
+                                attempt++
+                                getNewRandom()
+                            } else {
+                                attempt = 0
+                                liveData.postValue(guessResult)
+                            }
+                            isRunning = false
+                        }, { error ->
+                            netWorkliveData.postValue(NetworkState.error(error.message))
+                            isRunning = false
+                        })
+            }
+        }
     }
 
 
