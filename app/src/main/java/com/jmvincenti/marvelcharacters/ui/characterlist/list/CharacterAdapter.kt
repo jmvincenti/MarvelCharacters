@@ -51,7 +51,7 @@ class CharacterAdapter(private var listener: OnCharacterSelectedListener?, priva
     }
 
     override fun getItemCount(): Int {
-        return super.getItemCount() + if (isLoading || showTryAgain) 1 else 0
+        return super.getItemCount() + if ((isLoading && super.getItemCount() > 0) || showTryAgain) 1 else 0
     }
 
     companion object {

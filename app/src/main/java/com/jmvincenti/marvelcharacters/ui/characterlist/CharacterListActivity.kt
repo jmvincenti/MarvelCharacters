@@ -21,6 +21,7 @@ import com.jmvincenti.marvelcharacters.ui.characterlist.list.CharacterAdapter
 import com.jmvincenti.marvelcharacters.ui.characterlist.list.OnCharacterSelectedListener
 import com.jmvincenti.marvelcharacters.ui.characterlist.list.OnTryAgainListener
 import kotlinx.android.synthetic.main.activity_character_list.*
+import timber.log.Timber
 
 
 class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, OnCharacterSelectedListener, OnTryAgainListener {
@@ -40,6 +41,7 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, O
         initAdapter()
 
         viewModel.characterList.observe(this, Observer { result ->
+            Timber.d("new items")
             adapter.submitList(result)
         })
         viewModel.onNewList.observe(this, Observer {
@@ -71,6 +73,7 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, O
     }
 
     override fun showLoadMoreState(isLoading: Boolean) {
+        Timber.d("showLoadMoreState $isLoading")
         adapter.isLoading = isLoading
     }
 
