@@ -20,7 +20,7 @@ class CharactersClientTest {
     @Test
     fun getCharacters() {
         Single.fromCallable {
-            val request = charactersClient.getCharacters(0, 10)
+            val request = charactersClient.getCharactersSync(0, 10)
             return@fromCallable request.execute()
         }
                 .test()

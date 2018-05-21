@@ -13,5 +13,7 @@
     <string name="detail_error_title">Error</string>
     <string name="detail_error_message">Failed to load character detail</string>
     <string name="who_is_this_character_title">Who is this character?</string>
+    <string name="main_menu_guess_description">Guess the name of the character</string>
+    <string name="main_menu_guess_title">WHO AM I?</string>
 
 </resources>

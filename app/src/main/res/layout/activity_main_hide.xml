@@ -11,13 +11,12 @@
 
     <RelativeLayout
         android:id="@+id/main_guess_card"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:background="@color/thorColor"
         android:foreground="?attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@id/main_random_card"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -54,13 +53,12 @@
 
     <RelativeLayout
         android:id="@+id/main_random_card"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:background="@color/ironManColor"
         android:foreground="?attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@id/main_list_card"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/main_guess_card"
         app:layout_constraintTop_toBottomOf="@id/main_guess_card">
 
         <ImageView
@@ -97,13 +95,12 @@
 
     <RelativeLayout
         android:id="@+id/main_list_card"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:background="@color/hulkColor"
         android:foreground="?attr/selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/main_random_card"
         app:layout_constraintTop_toBottomOf="@id/main_random_card">
 
         <ImageView
