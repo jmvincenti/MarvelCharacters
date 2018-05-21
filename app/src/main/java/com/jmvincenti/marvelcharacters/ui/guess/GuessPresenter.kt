@@ -1,10 +1,11 @@
 package com.jmvincenti.marvelcharacters.ui.guess
 
+import com.jmvincenti.marvelcharacters.data.api.NetworkState
+import com.jmvincenti.marvelcharacters.data.api.Status
+
 class GuessPresenter : GuessContract.Presenter {
 
-
     override var view: GuessContract.View? = null
-
 
     var state1 = true
     var state2 = true
@@ -16,7 +17,7 @@ class GuessPresenter : GuessContract.Presenter {
     override fun onAttached() {
         view?.updateState(state1, state2, state3, state4)
         view?.setCover(guessResult?.target?.thumbnail)
-        if (targetId==null) {
+        if (targetId == null) {
             view?.showLoader(true)
             view?.startNext()
         }
@@ -43,7 +44,7 @@ class GuessPresenter : GuessContract.Presenter {
     }
 
     override fun onPressed(witch: Int) {
-        if (targetId == guessResult?.characters?.get(witch-1)?.id) {
+        if (targetId == guessResult?.characters?.get(witch - 1)?.id) {
             view?.showLoader(true)
             view?.setCover(null)
             view?.startNext()
@@ -61,7 +62,10 @@ class GuessPresenter : GuessContract.Presenter {
         }
     }
 
-    override fun handleError(throwable: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun handleState(state: NetworkState?) {
+        view?.showLoader(state == NetworkState.LOADING)
+        if (state?.status == Status.FAILED) {
+            view?.handleError()
+        }
     }
 }

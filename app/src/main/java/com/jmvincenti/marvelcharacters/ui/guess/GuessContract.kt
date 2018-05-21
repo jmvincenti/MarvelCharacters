@@ -1,5 +1,6 @@
 package com.jmvincenti.marvelcharacters.ui.guess
 
+import com.jmvincenti.marvelcharacters.data.api.NetworkState
 import com.jmvincenti.marvelcharacters.data.model.ApiImage
 
 interface GuessContract {
@@ -9,6 +10,7 @@ interface GuessContract {
         fun updateState(state1: Boolean, state2: Boolean, state3: Boolean, state4: Boolean)
         fun startNext()
         fun setCover(path: ApiImage?)
+        fun handleError()
         fun showLoader(isLoading: Boolean)
     }
 
@@ -17,7 +19,7 @@ interface GuessContract {
         fun onAttached()
         fun handleResult(guessResult: GuessResult?)
         fun onPressed(witch: Int)
-        fun handleError(throwable: Throwable)
+        fun handleState(state: NetworkState?)
     }
 
 }

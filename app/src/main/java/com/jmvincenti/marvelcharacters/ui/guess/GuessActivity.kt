@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
@@ -36,6 +37,9 @@ class GuessActivity : AppCompatActivity(), GuessContract.View {
         presenter?.view = this
         guessViewModel.getCharacterLiveData().observe(this, Observer {
             presenter?.handleResult(it)
+        })
+        guessViewModel.getStateLiveData().observe(this, Observer {
+            presenter?.handleState(it)
         })
         guess_answer1.setOnClickListener {
             presenter?.onPressed(1)
@@ -84,6 +88,15 @@ class GuessActivity : AppCompatActivity(), GuessContract.View {
                     .load(path.getPortraitLargePath(this))
                     .into(image)
         }
+    }
+
+    override fun handleError() {
+        val alertDialog = AlertDialog.Builder(this@GuessActivity).create()
+        alertDialog.setTitle(R.string.detail_error_title)
+        alertDialog.setMessage(getString(R.string.detail_error_message))
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(android.R.string.ok),
+                { _, _ -> guessViewModel.getNewRandom() })
+        alertDialog.show()
     }
 
     override fun displayResult(answer1: String?, answer2: String?, answer3: String?, answer4: String?) {

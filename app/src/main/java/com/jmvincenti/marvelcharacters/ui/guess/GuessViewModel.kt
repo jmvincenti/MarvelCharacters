@@ -3,6 +3,7 @@ package com.jmvincenti.marvelcharacters.ui.guess
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.jmvincenti.marvelcharacters.data.api.NetworkState
 import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.model.Character
 import com.jmvincenti.marvelcharacters.data.preferences.MyPreferences
@@ -12,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
 
     private val liveData = MutableLiveData<GuessResult>()
+    private val netWorkliveData = MutableLiveData<NetworkState>()
     private var characters: List<Character>? = null
     private var guessResult: GuessResult? = null
     private var attempt = 0
@@ -20,12 +22,15 @@ class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
     var guessPresenter: GuessContract.Presenter? = null
 
     fun getCharacterLiveData(): LiveData<GuessResult> = liveData
+    fun getStateLiveData(): LiveData<NetworkState> = netWorkliveData
 
     fun getNewRandom() {
+        netWorkliveData.postValue(NetworkState.LOADING)
         charactersClient.getCharactersAsync((Math.random() * (MyPreferences.maxCharacter - 4)).toInt(), 4)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
+                    netWorkliveData.postValue(NetworkState.LOADED)
                     result?.response?.total?.let {
                         MyPreferences.maxCharacter = it
                     }
@@ -39,7 +44,7 @@ class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
                         liveData.postValue(guessResult)
                     }
                 }, { error ->
-                    TODO()
+                    netWorkliveData.postValue(NetworkState.error(error.message))
                 })
     }
 
