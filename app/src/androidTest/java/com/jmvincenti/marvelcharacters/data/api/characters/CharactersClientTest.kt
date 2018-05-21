@@ -37,7 +37,7 @@ class CharactersClientTest {
                 .test()
                 .assertNoErrors()
                 .assertValue { result ->
-                    result.response?.results?.size == 20
+                    result.response?.results?.size == 10
                 }
     }
 

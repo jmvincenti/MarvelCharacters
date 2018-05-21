@@ -39,9 +39,9 @@ android {
             dimension "environment"
             versionCode gitVersionCode
             versionName gitVersionName
-            buildConfigField 'String', 'API_BASE_URL', prodEnvironment.baseUrl
-            buildConfigField 'String', 'API_PRIVATE_KEY', prodEnvironment.privateKey
-            buildConfigField 'String', 'API_PUBLIC_KEY', prodEnvironment.publicKey
+            buildConfigField 'String', 'API_BASE_URL', "\"${prodEnvironment.baseUrl}\""
+            buildConfigField 'String', 'API_PRIVATE_KEY', "\"${prodEnvironment.privateKey}\""
+            buildConfigField 'String', 'API_PUBLIC_KEY', "\"${prodEnvironment.publicKey}\""
         }
     }
 
@@ -76,8 +76,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    testCompile libraries.mockito
-    androidTestCompile libraries.mockitoAndroid
+    testImplementation libraries.mockito
+    androidTestImplementation libraries.mockitoAndroid
 
     implementation libraries.appCompat
     implementation libraries.constraintLayout
