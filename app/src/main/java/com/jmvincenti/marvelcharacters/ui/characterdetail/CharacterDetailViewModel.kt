@@ -24,7 +24,9 @@ class CharacterDetailViewModel(private val charactersClient: CharactersClient,
 
     fun loadConfig(config: DetailConfig) {
         if (config.isRandom) {
-            loadRandomRemote()
+            if (livedata.value == null) {
+                loadRandomRemote()
+            }
         } else if (config.characterId != null) {
             if (livedata.value?.id == config.characterId) {
                 livedata.postValue(livedata.value)
