@@ -87,7 +87,7 @@ class GuessActivity : AppCompatActivity(), GuessContract.View {
         } else {
             image.visibility = View.VISIBLE
             Glide.with(this)
-                    .load(if ( resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) path.getPortraitLargePath(this)
+                    .load(if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) path.getPortraitLargePath(this)
                     else path.getLandscapePath(
                             this))
                     .into(image)

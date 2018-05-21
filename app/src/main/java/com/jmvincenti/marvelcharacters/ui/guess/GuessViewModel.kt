@@ -9,6 +9,7 @@ import com.jmvincenti.marvelcharacters.data.model.Character
 import com.jmvincenti.marvelcharacters.data.preferences.MyPreferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
 
@@ -27,29 +28,36 @@ class GuessViewModel(val charactersClient: CharactersClient) : ViewModel() {
     fun getStateLiveData(): LiveData<NetworkState> = netWorkliveData
 
     fun getNewRandom() {
+        Timber.d("getNewRandom $isRunning")
         synchronized(mLock) {
             if (!isRunning) {
                 isRunning = true
+                Timber.d("getNewRandom LOADING")
                 netWorkliveData.postValue(NetworkState.LOADING)
                 charactersClient.getCharactersAsync((Math.random() * (MyPreferences.maxCharacter - 4)).toInt(), 4)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ result ->
+                            Timber.d("getNewRandom LOADED")
                             netWorkliveData.postValue(NetworkState.LOADED)
                             result?.response?.total?.let {
                                 MyPreferences.maxCharacter = it
                             }
                             characters = result.response?.results
                             guessResult = GuessResult(characters?.get((Math.random() * 4).toInt()), characters)
+                            isRunning = false
                             if (attempt < maxAttempt && guessResult?.target?.thumbnail?.path?.contains("image_not_available") != false) {
+                                Timber.d("getNewRandom new attempt")
                                 attempt++
                                 getNewRandom()
                             } else {
+                                Timber.d("getNewRandom success")
                                 attempt = 0
                                 liveData.postValue(guessResult)
                             }
-                            isRunning = false
+
                         }, { error ->
+                            Timber.d(error)
                             netWorkliveData.postValue(NetworkState.error(error.message))
                             isRunning = false
                         })

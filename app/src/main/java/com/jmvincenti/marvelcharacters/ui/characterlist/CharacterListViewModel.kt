@@ -97,7 +97,6 @@ class CharacterListViewModel(private val remoteSourceFactory: CharactersDataSour
                 onNewList.value = true
                 if (isRemoteMode.value == true) {
                     isRemoteMode.postValue(false)
-                    Timber.i("isRemoteMode.postValue(false)")
                 }
                 localCharacterList.value?.dataSource?.invalidate()
             }
@@ -107,7 +106,6 @@ class CharacterListViewModel(private val remoteSourceFactory: CharactersDataSour
                 lastFilter = query
                 onNewList.value = true
                 if (isRemoteMode.value == false) {
-                    Timber.i("isRemoteMode.postValue(true)")
                     isRemoteMode.postValue(true)
                 }
                 remoteSourceFactory.sourceLiveData.value?.applyFilter(query)
