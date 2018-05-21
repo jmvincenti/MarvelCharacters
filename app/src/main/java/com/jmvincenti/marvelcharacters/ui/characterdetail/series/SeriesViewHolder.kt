@@ -8,9 +8,6 @@ import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.model.Series
 import kotlinx.android.synthetic.main.item_series.view.*
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class SeriesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindTo(item: Series) {

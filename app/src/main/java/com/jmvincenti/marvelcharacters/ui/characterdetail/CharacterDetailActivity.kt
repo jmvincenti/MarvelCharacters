@@ -1,25 +1,29 @@
 package com.jmvincenti.marvelcharacters.ui.characterdetail
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.jmvincenti.marvelcharacters.R
-import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.model.ApiImage
 import com.jmvincenti.marvelcharacters.data.model.Comic
 import com.jmvincenti.marvelcharacters.data.model.Series
 import com.jmvincenti.marvelcharacters.data.model.Stories
-import com.jmvincenti.marvelcharacters.ui.Utils
+import com.jmvincenti.marvelcharacters.injection.InjectorManager
 import com.jmvincenti.marvelcharacters.ui.characterdetail.comics.ComicAdapter
 import com.jmvincenti.marvelcharacters.ui.characterdetail.comics.SeriesAdapter
 import com.jmvincenti.marvelcharacters.ui.characterdetail.comics.StoriesAdapter
-import com.jmvincenti.marvelcharacters.ui.getLandscapePath
+import com.jmvincenti.marvelcharacters.ui.utils.UiUtils
+import com.jmvincenti.marvelcharacters.ui.utils.getLandscapePath
 import kotlinx.android.synthetic.main.activity_character_detail.*
+
 
 class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.View {
 
@@ -28,23 +32,31 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
     private lateinit var seriesAdapter: SeriesAdapter
     private lateinit var storiesAdapter: StoriesAdapter
     private lateinit var viewModel: CharacterDetailViewModel
+    private lateinit var presenter: CharacterDetailContract.Presenter<CharacterDetailContract.View>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
         setContentView(R.layout.activity_character_detail)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initAdapters()
         viewModel = getViewModel()
-        if (viewModel.presenter == null) {
-            viewModel.presenter = CharacterDetailPresenter() //TODO injection
-        }
-        viewModel.presenter?.setView(this)
-        val characterId = intent?.getIntExtra(INTENT_CHARACTER_ID, -1) ?: -1
-        if (characterId == -1) {
-            TODO()
-        } else {
-            viewModel.loadCharacter(characterId)
-        }
+        presenter = InjectorManager.getCharacterDetailPresenter()
+        presenter.setView(this)
+        viewModel.getCharacterLiveData().observe(this, Observer {
+            presenter.handleCharacter(it)
+        })
+        viewModel.getErrorLiveData().observe(this, Observer {
+            presenter.handleError(it)
+        })
+        val config = DetailConfig(
+                isRandom = intent?.getBooleanExtra(INTENT_IS_RANDOM, false) ?: false,
+                characterId = intent?.getIntExtra(INTENT_CHARACTER_ID, -1) ?: -1,
+                characterName = intent?.getStringExtra(INTENT_CHARACTER_NAME))
+        presenter.handleConfig(config)
+        viewModel.loadConfig(config)
+
     }
 
     override fun setName(title: String?) {
@@ -67,9 +79,13 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
         character_detail_description.visibility = View.GONE
     }
 
-    override fun handleNoDescription() {
-        character_detail_description.visibility = View.VISIBLE
-        character_detail_description.setText(R.string.no_description)
+    override fun handleError() {
+        val alertDialog = AlertDialog.Builder(this@CharacterDetailActivity).create()
+        alertDialog.setTitle(R.string.detail_error_title)
+        alertDialog.setMessage(getString(R.string.detail_error_message))
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(android.R.string.ok),
+                { _, _ -> finish() })
+        alertDialog.show()
     }
 
     override fun hideComics() {
@@ -114,7 +130,7 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
 
     override fun initDetailAction(url: String) {
         character_detail_opendetail.visibility = View.VISIBLE
-        character_detail_opendetail.setOnClickListener { Utils.openLink(this, url) }
+        character_detail_opendetail.setOnClickListener { UiUtils.openLink(this, url) }
     }
 
     override fun hideWikiAction() {
@@ -123,7 +139,7 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
 
     override fun initWikiAction(url: String) {
         character_detail_openwiki.visibility = View.VISIBLE
-        character_detail_openwiki.setOnClickListener { Utils.openLink(this, url) }
+        character_detail_openwiki.setOnClickListener { UiUtils.openLink(this, url) }
     }
 
     override fun hideComicsAction() {
@@ -132,7 +148,7 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
 
     override fun initComicsAction(url: String) {
         character_detail_opencomics.visibility = View.VISIBLE
-        character_detail_opencomics.setOnClickListener { Utils.openLink(this, url) }
+        character_detail_opencomics.setOnClickListener { UiUtils.openLink(this, url) }
     }
 
     private fun initAdapters() {
@@ -152,14 +168,28 @@ class CharacterDetailActivity : AppCompatActivity(), CharacterDetailContract.Vie
     private fun getViewModel(): CharacterDetailViewModel {
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val client = CharactersClient()
+                val client = InjectorManager.getCharactersClient()
+                val dao = InjectorManager.getCharacterDao(this@CharacterDetailActivity)
                 @Suppress("UNCHECKED_CAST")
-                return CharacterDetailViewModel(client) as T
+                return CharacterDetailViewModel(client, dao) as T
             }
         })[CharacterDetailViewModel::class.java]
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     companion object {
         const val INTENT_CHARACTER_ID = "intent_character_id"
+        const val INTENT_CHARACTER_NAME = "intent_character_name"
+        const val INTENT_IS_RANDOM = "intent_is_random"
     }
 }

@@ -6,9 +6,6 @@ import android.content.Intent
 import android.net.Uri
 
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class UiUtils {
     companion object {
         fun openLink(context : Context, url : String) {

@@ -23,4 +23,7 @@ interface CharacterDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertOrUpdate(items: List<Character>)
+
+    @Query("SELECT * FROM character WHERE id = :id ")
+    fun loadSingle(id: Int): Single<Character>
 }

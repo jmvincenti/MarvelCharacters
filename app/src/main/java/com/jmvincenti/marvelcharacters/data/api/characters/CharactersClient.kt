@@ -14,6 +14,6 @@ class CharactersClient(retrofit: Retrofit) : BaseApiClient(retrofit) {
     fun getCharactersSync(offset: Int = 0, limit: Int, startName: String? = null) = service.getCharactersSync(offset, limit, startName)
     fun getCharactersAsync(offset: Int = 0, limit: Int, startName: String? = null) = service.getCharactersAsync(offset, limit, startName)
 
-    fun getCharacter(id: Int) = service.getCharacter(id).flatMap { result -> Single.just(result.response?.results?.get(0)) }
+    fun getCharacter(id: Int) = service.getCharacter(id).flatMap { result -> Single.just(result.response) }
 
 }

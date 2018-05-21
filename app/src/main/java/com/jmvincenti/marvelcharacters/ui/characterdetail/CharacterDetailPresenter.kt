@@ -3,15 +3,18 @@ package com.jmvincenti.marvelcharacters.ui.characterdetail
 import com.jmvincenti.marvelcharacters.data.model.ApiUrl
 import com.jmvincenti.marvelcharacters.data.model.Character
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class CharacterDetailPresenter<V : CharacterDetailContract.View> : CharacterDetailContract.Presenter<V> {
+
+
     var mView: V? = null
 
 
     override fun setView(view: V) {
         mView = view
+    }
+
+    override fun handleConfig(config: DetailConfig) {
+        config.characterName?.let { mView?.setName(it) }
     }
 
 
@@ -22,7 +25,7 @@ class CharacterDetailPresenter<V : CharacterDetailContract.View> : CharacterDeta
         character?.thumbnail?.let { mView?.setCover(it) }
 
         val comics = character?.comics?.items
-        if (comics == null|| comics.isEmpty()) {
+        if (comics == null || comics.isEmpty()) {
             mView?.hideComics()
         } else {
             mView?.showComics(comics)
@@ -36,7 +39,7 @@ class CharacterDetailPresenter<V : CharacterDetailContract.View> : CharacterDeta
         }
 
         val stories = character?.stories?.items
-        if (stories == null|| stories.isEmpty()) {
+        if (stories == null || stories.isEmpty()) {
             mView?.hideStories()
         } else {
             mView?.showStories(stories)
@@ -76,7 +79,7 @@ class CharacterDetailPresenter<V : CharacterDetailContract.View> : CharacterDeta
 
     }
 
-    override fun handleError(error: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun handleError(error: Throwable?) {
+        mView?.handleError()
     }
 }

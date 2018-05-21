@@ -3,16 +3,14 @@ package com.jmvincenti.marvelcharacters.ui.characterdetail
 import com.jmvincenti.marvelcharacters.data.model.*
 
 
-/**
- * TODO: Add a class header comment! 😘
- */
 interface CharacterDetailContract {
 
     interface View {
+        fun handleError()
+
         fun setName(title: String?)
         fun setCover(url: ApiImage)
         fun hideDescription()
-        fun handleNoDescription()
         fun setDescription(desciption: String)
         fun hideComics()
         fun showComics(comics: List<Comic>)
@@ -20,7 +18,6 @@ interface CharacterDetailContract {
         fun showSeries(series: List<Series>)
         fun hideStories()
         fun showStories(stories: List<Stories>)
-
         fun hideDetailAction()
         fun initDetailAction(url: String)
         fun hideWikiAction()
@@ -33,7 +30,8 @@ interface CharacterDetailContract {
     interface Presenter<V : CharacterDetailContract.View> {
         fun setView(view: V)
         fun handleCharacter(character: Character?)
-        fun handleError(error: Throwable)
+        fun handleConfig(config : DetailConfig)
+        fun handleError(error: Throwable?)
     }
 
 

@@ -4,9 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.jmvincenti.marvelcharacters.data.model.Comic
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class  ComicAdapter : RecyclerView.Adapter<ComicViewHolder>() {
     val items  = mutableListOf<Comic>()
 

@@ -8,9 +8,6 @@ import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.model.Stories
 import kotlinx.android.synthetic.main.item_stories.view.*
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class StoriesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindTo(item: Stories) {

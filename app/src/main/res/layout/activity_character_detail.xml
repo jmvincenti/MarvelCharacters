@@ -20,13 +20,14 @@
 
             <TextView
                 android:id="@+id/character_detail_name"
-                style="@style/AppTheme.Title"
+                style="@style/AppTheme.MainTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
-                android:textColor="@color/greyPrimary" />
+                android:textColor="@color/greyPrimary"
+                android:transitionName="name" />
 
             <TextView
                 android:id="@+id/character_detail_description"
@@ -224,6 +225,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
+                android:transitionName="cover"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar

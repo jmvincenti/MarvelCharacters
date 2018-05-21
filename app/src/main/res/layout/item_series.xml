@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
-        app:cardBackgroundColor="@color/spiderManColor"
+        app:cardBackgroundColor="@color/ironManColor"
         app:cardCornerRadius="3dp"
         app:cardElevation="3dp">
 
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="150dp"
-                android:minHeight="100dp"
+                android:minLines="4"
                 android:textColor="@color/textOnHeroes"/>
 
         </LinearLayout>
