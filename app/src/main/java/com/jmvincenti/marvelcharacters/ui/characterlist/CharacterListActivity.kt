@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.MenuItemCompat
@@ -58,7 +59,8 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, O
 
 
     private fun initAdapter() {
-        val linearLayoutManager = GridLayoutManager(this, 2)
+        val columnCount =  if ( resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
+        val linearLayoutManager = GridLayoutManager(this,columnCount)
         adapter = CharacterAdapter(this, this)
         recycler_characters.layoutManager = linearLayoutManager
         recycler_characters.adapter = adapter
