@@ -12,5 +12,6 @@
     <string name="list_failed">Failed to load more characters</string>
     <string name="detail_error_title">Error</string>
     <string name="detail_error_message">Failed to load character detail</string>
+    <string name="who_is_this_character_title">Who is this character?</string>
 
 </resources>
