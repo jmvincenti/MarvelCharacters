@@ -6,63 +6,104 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
+import android.view.View
 import com.jmvincenti.marvelcharacters.R
-import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
-import com.jmvincenti.marvelcharacters.data.repository.CharactersDataSourceFactory
+import com.jmvincenti.marvelcharacters.data.model.Character
+import com.jmvincenti.marvelcharacters.injection.InjectorManager
 import com.jmvincenti.marvelcharacters.ui.characterdetail.CharacterDetailActivity
-import io.reactivex.disposables.CompositeDisposable
+import com.jmvincenti.marvelcharacters.ui.characterlist.list.CharacterAdapter
+import com.jmvincenti.marvelcharacters.ui.characterlist.list.OnCharacterSelectedListener
+import com.jmvincenti.marvelcharacters.ui.characterlist.list.OnTryAgainListener
 import kotlinx.android.synthetic.main.activity_character_list.*
-import java.util.concurrent.Executors
 
-class CharacterListActivity : AppCompatActivity(), CharacterListContract.View {
+
+class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, OnCharacterSelectedListener, OnTryAgainListener {
 
 
     lateinit var adapter: CharacterAdapter
     private lateinit var viewModel: CharacterListViewModel
+    private var presenter: CharacterListContract.Presenter<CharacterListContract.View>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_list)
         viewModel = getViewModel()
-        if (viewModel.presenter == null) {
-            viewModel.presenter = CharacterListPresenter()
-        }
-        viewModel.presenter?.setView(this)
+        presenter = CharacterListPresenter()
+        presenter?.setView(this)
+
         initAdapter()
-        viewModel.characterList.observe(this, Observer{ result ->
+
+        viewModel.characterList.observe(this, Observer { result ->
             adapter.submitList(result)
+        })
+        viewModel.onNewList.observe(this, Observer {
+            adapter.onClear()
+            initAdapter()
+        })
+        viewModel.loadMoreState.observe(this, Observer { state ->
+            presenter?.handleLoadMoreState(state)
+        })
+        viewModel.initialLoadState.observe(this, Observer { state ->
+            presenter?.handleInitialState(state)
         })
     }
 
+
     private fun initAdapter() {
-//        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val linearLayoutManager = GridLayoutManager(this, 2)
-        adapter = CharacterAdapter(viewModel.presenter)
+        adapter = CharacterAdapter(this, this)
         recycler_characters.layoutManager = linearLayoutManager
         recycler_characters.adapter = adapter
     }
 
+    override fun onTryAgain() {
+        viewModel.onTryAgain()
+    }
 
+    override fun showTryAgain(showTryAgain: Boolean) {
+        adapter.showTryAgain = showTryAgain
+    }
 
-    override fun openCharacterDetail(characterId: Int) {
-        val i = Intent(this, CharacterDetailActivity::class.java)
-        i.putExtra(CharacterDetailActivity.INTENT_CHARACTER_ID, characterId)
-        startActivity(i)
+    override fun showLoadMoreState(isLoading: Boolean) {
+        adapter.isLoading = isLoading
+    }
+
+    override fun showInitialLoadState(isLoading: Boolean) {
+        if (isLoading) {
+            animation_view.visibility = View.VISIBLE
+            recycler_characters.visibility = View.INVISIBLE
+            animation_view.playAnimation()
+        } else {
+
+            animation_view.visibility = View.INVISIBLE
+            recycler_characters.visibility = View.VISIBLE
+            animation_view.cancelAnimation()
+        }
+    }
+
+    override fun onCharacterSelected(character: Character?, tileView: View) {
+        if (presenter?.onOpenCharacter(character) == true) {
+            character?.let {
+                val i = Intent(this, CharacterDetailActivity::class.java)
+                i.putExtra(CharacterDetailActivity.INTENT_CHARACTER_ID, it.id)
+                i.putExtra(CharacterDetailActivity.INTENT_CHARACTER_NAME, it.name)
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, tileView, "profile")
+                startActivity(i, options.toBundle())
+            }
+        }
     }
 
     private fun getViewModel(): CharacterListViewModel {
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val client = CharactersClient()
-                val repo = CharactersDataSourceFactory(client, Executors.newFixedThreadPool(5))
                 @Suppress("UNCHECKED_CAST")
-                return CharacterListViewModel(repo) as T
+                return CharacterListViewModel(InjectorManager.getCharacterRepository(this@CharacterListActivity)) as T
             }
         })[CharacterListViewModel::class.java]
     }

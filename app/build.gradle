@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion versions.compileSdkVersion
     defaultConfig {
@@ -87,8 +89,13 @@ dependencies {
     implementation libraries.rxandroid
     implementation libraries.rxjava
 
+    kapt libraries.roomAnnotation
+    implementation libraries.room
+
     implementation libraries.hawk
     implementation libraries.timber
+
+    implementation libraries.lottie
 
 
 }

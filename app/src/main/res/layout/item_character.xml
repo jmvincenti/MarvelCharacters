@@ -4,35 +4,38 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="2dp">
+    android:padding="1dp">
 
     <ImageView
         android:id="@+id/character_item_image"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/marvel" />
+        android:src="@drawable/marvel"
+        android:transitionName="cover" />
 
     <TextView
         android:id="@+id/character_item_name"
         style="@style/AppTheme.Subheader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/character_item_image"
+        android:layout_below="@id/character_item_image"
         android:background="@color/imageOverlayColor"
         android:ellipsize="end"
-        android:gravity="center"
+        android:gravity="center|start"
         android:maxLines="1"
         android:padding="6dp"
+        android:paddingStart="6dp"
         android:textColor="@color/textOverlayColor"
+        android:transitionName="name"
         tools:text="Character name" />
 
     <View
         android:id="@+id/character_item_overlay"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_alignTop="@id/character_item_image"
         android:layout_alignBottom="@id/character_item_image"
+        android:layout_alignTop="@id/character_item_image"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true" />

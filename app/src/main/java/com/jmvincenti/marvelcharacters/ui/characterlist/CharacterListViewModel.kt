@@ -2,33 +2,45 @@ package com.jmvincenti.marvelcharacters.ui.characterlist
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import com.jmvincenti.marvelcharacters.data.api.NetworkState
 import com.jmvincenti.marvelcharacters.data.model.Character
-import com.jmvincenti.marvelcharacters.data.repository.CharactersDataSourceFactory
+import com.jmvincenti.marvelcharacters.data.repository.CharacterRepository
+import com.jmvincenti.marvelcharacters.ui.utils.SingleLiveEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
-/**
- * TODO: Add a class header comment! 😘
- */
-
-class CharacterListViewModel(sourceFactory: CharactersDataSourceFactory) : ViewModel() {
+class CharacterListViewModel( val repository: CharacterRepository) : ViewModel() {
     private val searchSubject = PublishSubject.create<String?>()
     private val compositeDisposable = CompositeDisposable()
-    var presenter: CharacterListContract.Presenter<CharacterListContract.View>? = null
+
+    var onNewList = SingleLiveEvent<Boolean>()
+    var lastFilter: String? = null
 
     init {
         compositeDisposable.add(searchSubject
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(800, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
-                .subscribe({ filter ->
-                    sourceFactory.sourceLiveData.value?.applyFilter(filter)
-                }, { throwable ->
-                    throwable.printStackTrace()
-                    presenter?.handleError(throwable)
-                }))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { filter ->
+                    if (filter.isNullOrBlank()) {
+                        if (lastFilter != null) {
+                            lastFilter = null
+                            onNewList.value = true
+                            repository.applyFilter(null)
+                        }
+                    } else {
+                        if (filter != lastFilter) {
+                            lastFilter = filter
+                            onNewList.value = true
+                            repository.applyFilter(filter)
+                        }
+                    }
+                })
     }
 
     fun applyFilter(query: String?) {
@@ -40,8 +52,11 @@ class CharacterListViewModel(sourceFactory: CharactersDataSourceFactory) : ViewM
         compositeDisposable.dispose()
     }
 
-    val characterList: LiveData<PagedList<Character>> = LivePagedListBuilder(
-            sourceFactory,
-            /* page size */ 20
-    ).build()
+    fun onTryAgain() {
+        repository.tryAgain()
+    }
+
+    val characterList: LiveData<PagedList<Character>> = repository.charactersLiveData
+    val initialLoadState: LiveData<NetworkState> = repository.initialLoadState
+    val loadMoreState: LiveData<NetworkState> = repository.loadMoreState
 }

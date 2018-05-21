@@ -6,14 +6,27 @@
     android:layout_height="match_parent"
     tools:context="com.jmvincenti.marvelcharacters.ui.characterlist.CharacterListActivity">
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_characters"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        tools:listitem="@layout/item_character" />
+        android:layout_height="match_parent">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animation_view"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/search_ask_loop" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_characters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            tools:listitem="@layout/item_character" />
+
+
+    </RelativeLayout>
     <!--&lt;!&ndash; Shadow below toolbar &ndash;&gt;-->
     <!--<View-->
     <!--android:layout_width="match_parent"-->

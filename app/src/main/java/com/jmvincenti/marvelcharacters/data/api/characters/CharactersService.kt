@@ -14,9 +14,13 @@ import retrofit2.http.Query
 interface CharactersService {
 
     @GET("v1/public/characters")
-    fun getCharacters(@Query("offset") offset: Int, @Query("limit") limit: Int, @Query("nameStartsWith") nameStartsWith: String?): Call<CharacterDataWrapper<Character>>
+    fun getCharactersSync(@Query("offset") offset: Int, @Query("limit") limit: Int, @Query("nameStartsWith") nameStartsWith: String?): Call<CharacterDataWrapper<Character>>
+
+    @GET("v1/public/characters")
+    fun getCharactersAsync(@Query("offset") offset: Int, @Query("limit") limit: Int, @Query("nameStartsWith") nameStartsWith: String?): Single<CharacterDataWrapper<Character>>
+
 
     @GET("v1/public/characters/{id}")
-    fun getCharacter(@Path("id")  id : Int): Single<CharacterDataWrapper<Character>>
+    fun getCharacter(@Path("id") id: Int): Single<CharacterDataWrapper<Character>>
 
 }

@@ -1,11 +1,11 @@
-package com.jmvincenti.marvelcharacters.ui
+package com.jmvincenti.marvelcharacters.ui.utils
 
 import android.content.Context
 import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.model.ApiImage
 
 /**
- * Utils extensions for UI
+ * UiUtils extensions for UI
  */
 
 

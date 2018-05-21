@@ -8,12 +8,15 @@ ext {
             hawkVersion            : '2.0.1',
             pagingVersion          : '1.0.0',
             pagingRxVersion        : '1.0.0-alpha1',
+            roomVersion            : '1.0.0',
+            roomAnnotationVersion  : '1.0.0',
             lifecycleVersion       : '1.1.1',
             retrofitVersion        : '2.4.0',
             glideVersion           : '4.7.1',
             rxandroidVersion       : '2.0.2',
             rxjavaVersion          : '2.1.10',
             timberVersion          : '4.7.0',
+            lottieVersion          : '2.5.4',
 
     ]
 
@@ -39,6 +42,13 @@ ext {
             ],
             glide           : "com.github.bumptech.glide:glide:${versions.glideVersion}",
 
+
+            room            : [
+                    "android.arch.persistence.room:runtime:${versions.roomVersion}",
+                    "android.arch.persistence.room:rxjava2:${versions.roomVersion}",
+            ],
+            roomAnnotation  : "android.arch.persistence.room:compiler:${versions.roomAnnotationVersion}",
+
             /**
              * Rx
              */
@@ -53,8 +63,12 @@ ext {
             /**
              * Preferences
              */
-            hawk            : "com.orhanobut:hawk:${versions.hawkVersion}"
+            hawk            : "com.orhanobut:hawk:${versions.hawkVersion}",
 
+            /**
+             * UI/Design
+             */
+            lottie          : "com.airbnb.android:lottie:${versions.lottieVersion}"
 
     ]
 }

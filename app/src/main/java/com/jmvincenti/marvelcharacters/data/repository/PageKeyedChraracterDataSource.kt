@@ -5,15 +5,10 @@ import android.arch.paging.PageKeyedDataSource
 import com.jmvincenti.marvelcharacters.data.api.NetworkState
 import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.model.Character
-import com.jmvincenti.marvelcharacters.data.model.CharacterDataWrapper
-import retrofit2.Call
-import retrofit2.Response
+import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.Executor
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class PageKeyedChraracterDataSource(private val client: CharactersClient,
                                     private val retryExecutor: Executor) : PageKeyedDataSource<Int, Character>() {
 
@@ -21,6 +16,7 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
     private var retry: (() -> Any)? = null
 
     fun retryAllFailed() {
+        Timber.i("retryAllFailed")
         val prevRetry = retry
         retry = null
         prevRetry?.let {
@@ -34,7 +30,8 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
     val initialLoad = MutableLiveData<NetworkState>()
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Character>) {
-        val request = client.getCharacters(
+        Timber.i("loadInitial")
+        val request = client.getCharactersSync(
                 offset = 0,
                 limit = params.requestedLoadSize,
                 startName = filter)
@@ -45,10 +42,10 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
         try {
             val response = request.execute()
             val data = response.body()?.response
-            networkState.postValue(NetworkState.LOADED)
-            initialLoad.postValue(NetworkState.LOADED)
             retry = null
             if (data != null) {
+                networkState.postValue(NetworkState.LOADED)
+                initialLoad.postValue(NetworkState.LOADED)
                 val items = data.results ?: emptyList()
                 if (data.offset + data.count < data.total) {
                     callback.onResult(items, null, data.offset + data.limit)
@@ -57,70 +54,64 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
                 }
             } else {
                 val error = NetworkState.error("empty data")
+                networkState.postValue(error)
+                initialLoad.postValue(error)
                 callback.onResult(emptyList(), null, null)
-                handleInitialError(params, callback, error)
+                handleInitialError(params, callback)
             }
         } catch (ioException: IOException) {
             val error = NetworkState.error(ioException.message ?: "unknown error")
-            handleInitialError(params, callback, error)
+            networkState.postValue(error)
+            initialLoad.postValue(error)
+            handleInitialError(params, callback)
         }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Character>) {
-        networkState.postValue(NetworkState.LOADING)
-        client.getCharacters(
+        Timber.i("loadAfter")
+        val request = client.getCharactersSync(
                 offset = params.key,
                 limit = params.requestedLoadSize,
-                startName = filter).enqueue(
-                object : retrofit2.Callback<CharacterDataWrapper<Character>> {
-                    override fun onFailure(call: Call<CharacterDataWrapper<Character>>, t: Throwable) {
-                        retry = {
-                            loadAfter(params, callback)
-                        }
-                        networkState.postValue(NetworkState.error(t.message ?: "unknown error"))
-                    }
+                startName = filter)
 
-                    override fun onResponse(
-                            call: Call<CharacterDataWrapper<Character>>,
-                            response: Response<CharacterDataWrapper<Character>>) {
-
-                        if (response.isSuccessful) {
-                            val data = response.body()?.response
-                            if (data != null) {
-                                networkState.postValue(NetworkState.LOADED)
-                                val items = data.results ?: emptyList()
-                                if (data.offset + data.count < data.total) {
-                                    callback.onResult(items, data.offset + data.limit)
-                                } else {
-                                    callback.onResult(items, null)
-                                }
-                            } else {
-                                val error = NetworkState.error("empty data")
-                                callback.onResult(emptyList(), null)
-                                handleCallError(params, callback, error)
-                            }
-                        } else {
-                            val error = NetworkState.error("error code: ${response.code()}")
-                            handleCallError(params, callback, error)
-                        }
-                    }
+        networkState.postValue(NetworkState.LOADING)
+        // triggered by a refresh, we better execute sync
+        try {
+            val response = request.execute()
+            val data = response.body()?.response
+            retry = null
+            if (data != null) {
+                networkState.postValue(NetworkState.LOADED)
+                val items = data.results ?: emptyList()
+                if (data.offset + data.count < data.total) {
+                    callback.onResult(items, data.offset + data.limit)
+                } else {
+                    callback.onResult(items, null)
                 }
-        )
+            } else {
+                val error = NetworkState.error("empty data")
+                networkState.postValue(error)
+                callback.onResult(emptyList(), null)
+                handleCallError(params, callback)
+            }
+
+        } catch (ioException: IOException) {
+            val error = NetworkState.error(ioException.message ?: "unknown error")
+            handleCallError(params, callback)
+            networkState.postValue(error)
+        }
     }
 
-    private fun handleInitialError(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Character>, error: NetworkState) {
+    private fun handleInitialError(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Character>) {
         retry = {
             loadInitial(params, callback)
         }
-        networkState.postValue(error)
-        initialLoad.postValue(error)
     }
 
-    private fun handleCallError(params: LoadParams<Int>, callback: LoadCallback<Int, Character>, error: NetworkState) {
+    private fun handleCallError(params: LoadParams<Int>, callback: LoadCallback<Int, Character>) {
         retry = {
             loadAfter(params, callback)
         }
-        networkState.postValue(error)
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Character>) {
@@ -133,13 +124,11 @@ class PageKeyedChraracterDataSource(private val client: CharactersClient,
         } else {
             filter
         }
-        if (newFilter != PageKeyedChraracterDataSource.filter) {
-            PageKeyedChraracterDataSource.filter = newFilter
-            invalidate()
-        }
+        PageKeyedChraracterDataSource.filter = newFilter
+        invalidate()
     }
 
     companion object {
-        public var filter: String? = null
+        var filter: String? = null
     }
 }

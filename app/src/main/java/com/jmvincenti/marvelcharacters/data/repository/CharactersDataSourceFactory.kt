@@ -6,9 +6,6 @@ import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.model.Character
 import java.util.concurrent.Executor
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class CharactersDataSourceFactory(private val client: CharactersClient,
                                   private val retryExecutor: Executor) : DataSource.Factory<Int, Character>() {
     val sourceLiveData = MutableLiveData<PageKeyedChraracterDataSource>()

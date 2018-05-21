@@ -1,21 +1,22 @@
 package com.jmvincenti.marvelcharacters.ui.characterlist
 
+import com.jmvincenti.marvelcharacters.data.api.NetworkState
 import com.jmvincenti.marvelcharacters.data.model.Character
 
 
-/**
- * TODO: Add a class header comment! 😘
- */
 interface CharacterListContract {
 
     interface View {
-        fun openCharacterDetail(characterId : Int)
+        fun showInitialLoadState(isLoading: Boolean)
+        fun showTryAgain(showTryAgain: Boolean)
+        fun showLoadMoreState(isLoading: Boolean)
     }
 
     interface Presenter<V : CharacterListContract.View> {
         fun setView(view: V)
-        fun onCharacterSelected(character: Character?)
-        fun handleError(throwable: Throwable)
+        fun handleInitialState(state: NetworkState?)
+        fun handleLoadMoreState(state: NetworkState?)
+        fun onOpenCharacter(character: Character?): Boolean
     }
 
 

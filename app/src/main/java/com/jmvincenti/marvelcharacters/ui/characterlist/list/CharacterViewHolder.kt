@@ -1,4 +1,4 @@
-package com.jmvincenti.marvelcharacters.ui.characterlist
+package com.jmvincenti.marvelcharacters.ui.characterlist.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,18 +7,15 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.jmvincenti.marvelcharacters.R
 import com.jmvincenti.marvelcharacters.data.model.Character
-import com.jmvincenti.marvelcharacters.ui.getLandscapePath
+import com.jmvincenti.marvelcharacters.ui.utils.getLandscapePath
 import kotlinx.android.synthetic.main.item_character.view.*
 
-/**
- * TODO: Add a class header comment! 😘
- */
-class CharacterViewHolder(view: View, private val presenter: CharacterListContract.Presenter<CharacterListContract.View>?) : RecyclerView.ViewHolder(view) {
+class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 
-    fun bindTo(character: Character?) {
+    fun bindTo(character: Character?, listener: OnCharacterSelectedListener?) {
         itemView.character_item_overlay.setOnClickListener {
-            presenter?.onCharacterSelected(character)
+            listener?.onCharacterSelected(character, itemView.character_item_name)
         }
         itemView.character_item_name.text = character?.name
         Glide.with(itemView.context)
@@ -28,10 +25,10 @@ class CharacterViewHolder(view: View, private val presenter: CharacterListContra
 
 
     companion object {
-        fun create(parent: ViewGroup, presenter: CharacterListContract.Presenter<CharacterListContract.View>?): CharacterViewHolder {
+        fun create(parent: ViewGroup): CharacterViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(LAYOUT_ID, parent, false)
-            return CharacterViewHolder(view, presenter)
+            return CharacterViewHolder(view)
         }
 
         const val LAYOUT_ID = R.layout.item_character
