@@ -7,8 +7,7 @@ import com.jmvincenti.marvelcharacters.data.api.AuthInterceptor
 import com.jmvincenti.marvelcharacters.data.api.characters.CharactersClient
 import com.jmvincenti.marvelcharacters.data.database.CharacterDao
 import com.jmvincenti.marvelcharacters.data.database.CharactersDb
-import com.jmvincenti.marvelcharacters.data.repository.CharacterRepository
-import com.jmvincenti.marvelcharacters.data.repository.CharactersDataSourceFactory
+import com.jmvincenti.marvelcharacters.data.datasources.CharactersDataSourceFactory
 import com.jmvincenti.marvelcharacters.ui.characterdetail.CharacterDetailContract
 import com.jmvincenti.marvelcharacters.ui.characterdetail.CharacterDetailPresenter
 import okhttp3.OkHttpClient
@@ -18,9 +17,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
 
 
-/**
- * TODO: Add a class header comment! 😘
- */
 class InjectorManager {
 
     companion object {
@@ -49,17 +45,6 @@ class InjectorManager {
 
         fun getCharacterDao(context: Context): CharacterDao {
             return getDb(context).characterDao()
-        }
-
-
-        fun getCharacterRepository(context: Context): CharacterRepository {
-            val client = getCharactersClient()
-            return CharacterRepository(
-                    remoteSourceFactory = getCharacterDatasourceFactory(client),
-                    charactersClient = getCharactersClient(),
-                    characterDao = getCharacterDao(context),
-                    retryExecutor = Executors.newFixedThreadPool(5)
-            )
         }
 
 

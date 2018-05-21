@@ -1,4 +1,4 @@
-package com.jmvincenti.marvelcharacters.data.repository
+package com.jmvincenti.marvelcharacters.data.datasources
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList

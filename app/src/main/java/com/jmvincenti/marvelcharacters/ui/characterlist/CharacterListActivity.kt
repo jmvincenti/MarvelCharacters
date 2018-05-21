@@ -23,6 +23,7 @@ import com.jmvincenti.marvelcharacters.ui.characterlist.list.OnCharacterSelected
 import com.jmvincenti.marvelcharacters.ui.characterlist.list.OnTryAgainListener
 import kotlinx.android.synthetic.main.activity_character_list.*
 import timber.log.Timber
+import java.util.concurrent.Executors
 
 
 class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, OnCharacterSelectedListener, OnTryAgainListener {
@@ -59,8 +60,8 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, O
 
 
     private fun initAdapter() {
-        val columnCount =  if ( resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
-        val linearLayoutManager = GridLayoutManager(this,columnCount)
+        val columnCount = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
+        val linearLayoutManager = GridLayoutManager(this, columnCount)
         adapter = CharacterAdapter(this, this)
         recycler_characters.layoutManager = linearLayoutManager
         recycler_characters.adapter = adapter
@@ -108,7 +109,12 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, O
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return CharacterListViewModel(InjectorManager.getCharacterRepository(this@CharacterListActivity)) as T
+                return CharacterListViewModel(
+                        remoteSourceFactory = InjectorManager.getCharacterDatasourceFactory(InjectorManager.getCharactersClient()),
+                        charactersClient = InjectorManager.getCharactersClient(),
+                        characterDao = InjectorManager.getCharacterDao(this@CharacterListActivity),
+                        retryExecutor = Executors.newFixedThreadPool(5)
+                ) as T
             }
         })[CharacterListViewModel::class.java]
     }
@@ -118,17 +124,17 @@ class CharacterListActivity : AppCompatActivity(), CharacterListContract.View, O
         // Retrieve the SearchView and plug it into SearchManager
         val searchView = MenuItemCompat.getActionView(menu.findItem(R.id.action_search)) as SearchView
         searchView.setOnCloseListener {
-            viewModel.applyFilter(null)
+            viewModel.requestFilter(null)
             true
         }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.applyFilter(query)
+                viewModel.requestFilter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.applyFilter(newText)
+                viewModel.requestFilter(newText)
                 return true
             }
 
