@@ -18,6 +18,8 @@ class CharacterDetailViewModel(private val charactersClient: CharactersClient,
     private var character: Character? = null
     private val livedata = MutableLiveData<Character>()
     private val errorLivedata = MutableLiveData<Throwable>()
+    private val mLock = Any()
+    private var isRunning = false
 
     fun getCharacterLiveData(): LiveData<Character> = livedata
     fun getErrorLiveData(): LiveData<Throwable> = errorLivedata
@@ -51,32 +53,46 @@ class CharacterDetailViewModel(private val charactersClient: CharactersClient,
     }
 
     private fun loadRemote(id: Int) {
-        charactersClient.getCharacter(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    character = result?.results?.get(0)
-                    livedata.postValue(character)
-                }, { error ->
-                    Timber.d(error)
-                    errorLivedata.postValue(error)
-                })
+        synchronized(mLock) {
+            if (!isRunning) {
+                isRunning = true
+                charactersClient.getCharacter(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ result ->
+                            character = result?.results?.get(0)
+                            livedata.postValue(character)
+                            isRunning = false
+                        }, { error ->
+                            Timber.d(error)
+                            errorLivedata.postValue(error)
+                            isRunning = false
+                        })
+            }
+        }
     }
 
     private fun loadRandomRemote() {
-        charactersClient.getCharactersAsync((Math.random() * MyPreferences.maxCharacter).toInt(), 1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    result?.response?.total?.let {
-                        MyPreferences.maxCharacter = it
-                    }
-                    character = result?.response?.results?.get(0)
-                    livedata.postValue(character)
-                }, { error ->
-                    Timber.d(error)
-                    errorLivedata.postValue(error)
-                })
+        synchronized(mLock) {
+            if (!isRunning) {
+                isRunning = true
+                charactersClient.getCharactersAsync((Math.random() * MyPreferences.maxCharacter).toInt(), 1)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ result ->
+                            result?.response?.total?.let {
+                                MyPreferences.maxCharacter = it
+                            }
+                            character = result?.response?.results?.get(0)
+                            livedata.postValue(character)
+                            isRunning = false
+                        }, { error ->
+                            Timber.d(error)
+                            errorLivedata.postValue(error)
+                            isRunning = false
+                        })
+            }
+        }
     }
 
     override fun onCleared() {
