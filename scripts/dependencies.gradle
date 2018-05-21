@@ -17,10 +17,15 @@ ext {
             rxjavaVersion          : '2.1.10',
             timberVersion          : '4.7.0',
             lottieVersion          : '2.5.4',
+            mockitoVersion          : '2.7.22',
 
     ]
 
     libraries = [
+
+            mockito : "org.mockito:mockito-core:${versions.mockitoVersion}",
+            mockitoAndroid : "org.mockito:mockito-android:${versions.mockitoVersion}",
+
             /**
              * Support libraries
              */

@@ -1,20 +1,21 @@
 package com.jmvincenti.marvelcharacters.data.api.characters
 
+import com.jmvincenti.marvelcharacters.injection.InjectorManager
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 
 /**
- * Tests for API calls
+ * <b>Integration</b> tests for API calls
  * Used to check the Client implementation
  */
 class CharactersClientTest {
 
-    lateinit var charactersClient: CharactersClient
+    private lateinit var charactersClient: CharactersClient
 
     @Before
     fun iniTest() {
-        charactersClient = CharactersClient()
+        charactersClient = CharactersClient(InjectorManager.getRetrofitClient())
     }
 
     @Test
@@ -30,6 +31,16 @@ class CharactersClientTest {
                 }
     }
 
+    @Test
+    fun getCharactersAsync() {
+        charactersClient.getCharactersAsync(0, 10)
+                .test()
+                .assertNoErrors()
+                .assertValue { result ->
+                    result.response?.results?.size == 20
+                }
+    }
+
 
     @Test
     fun getCharacter() {
@@ -37,7 +48,7 @@ class CharactersClientTest {
                 .test()
                 .assertNoErrors()
                 .assertValue { result ->
-                    result.code == 200
+                    result.results?.get(0)?.id == 1009144
                 }
     }
 }

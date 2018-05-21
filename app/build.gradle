@@ -76,6 +76,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    testCompile libraries.mockito
+    androidTestCompile libraries.mockitoAndroid
+
     implementation libraries.appCompat
     implementation libraries.constraintLayout
     implementation libraries.cardview
